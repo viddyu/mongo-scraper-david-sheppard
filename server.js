@@ -1,38 +1,27 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
-
-mongoose.Promise = Promise;
-
-var app = express();
-var port = process.env.PORT || 3000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.text());
-app.use(bodyParser.json({ type: "application/vnd.api+json" }));
-
+var logger = require("morgan");
+var routes = require("./controller/article-controller")
 var exphbs = require("express-handlebars");
-app.engine("handlebars", exphbs({defaultLayout: "main"}));
-app.set("view engine", "handlebars");
 
+
+var PORT = process.env.PORT || 3002;
+var app = express();
+
+// for logging requests, this shows up in the console
+app.use(logger("dev"));
+//for form submissions
+app.use(bodyParser.urlencoded({extented: true}));
+
+// Set Handlebars.
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+// makes public folder th static directory
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://heroku_qhfgllsc:ig985pbo1vk8603cd5tt18bsmk@ds249787.mlab.com:49787/heroku_qhfgllsc");
-var db = mongoose.connection;
+//handles all the routes
+app.use(routes);
 
-db.on("error", function(error) {
-  console.log("Mongoose Error: ", error);
-});
-
-db.once("open", function() {
-  console.log("Mongoose connection successful.");
-});
-
-var routes = require("./controllers/routes.js");
-app.use("/",routes);
-
-
-app.listen(port, function() {
-    console.log("App running on " + port);
-  });
+app.listen(PORT, function(){
+  console.log("App is running on port: " + PORT)
+})

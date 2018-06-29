@@ -1,41 +1,56 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/"><img src="/img/brand.png"> NPR World News</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item ml-4">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item ml-2">
-        <a class="nav-link" href="/saved">Saved Articles</a>
-      </li>
-      <li class="nav-item ml-2">
-        <button class="btn btn-info" id="scrape">Scrape Articles</button>
-      </li>
-    </ul>
-  </div>
-</nav>
-{{!-- Jumbotron --}}
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <div class="background"></div>
-    <h1 class="display-4 text-center"><strong>NPR World News Scraper</strong></h1>
-    <p class="lead text-center"><strong>Utilizing Mongo</strong></p>
-  </div>
-</div>
-{{!-- Where each article scarpped is displayed --}}
-{{#each articles}}
+<main class="mdl-layout__content">
+    <section class="mdl-grid article_posts">
 
-<div class="card mx-auto mb-5">
-  <div class="card-header bg-info">
-    <a class="text-white" href="{{link}}" target="_blank">{{title}}</a>
-  </div>
-  <div class="card-body">
-    <p class="card-text">{{summary}}.</p>
-    <button class="btn btn-dark" id="save" data-id="{{_id}}">Save Article</button>
-  </div>
-</div>
+        {{#each articles}}
 
-{{/each}}
+        <div class="wide-card mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">
+                <a href="{{this.link}}" target="_blank">{{this.title}}</a>
+            </h2>
+          </div>
+
+          <div class="mdl-card__supporting-text">
+            {{this.snipText}}
+          </div>
+
+          <div class="mdl-card__actions mdl-card--border">
+
+            <a class="mdl-button mdl-js-button mdl-js-ripple-effect showComment" data-id="{{this._id}}">
+                    comments <i class="material-icons">arrow_drop_down</i></a>
+
+          </div>
+          <div class="comments">
+        
+            {{>comments/displayComment comments=this.comments}}
+            {{!-- <div>{{this.comments}}</div> --}}
+
+              
+            {{!-- Allow user to leave comments               --}}
+            <div class="mdl-card__actions mdl-card--border">
+              <form>
+                <div>Leave a comment:</div>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input uname-input" type="text">
+                  <label class="mdl-textfield__label" for="uname-input">your name</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input comment-input" type="text">
+                  <label class="mdl-textfield__label" for="comment-input">say something...</label>
+                </div>
+                <button class="mdl-button mdl-js-button mdl-button--icon addComment" data-id="{{this._id}}">
+                            <i class="material-icons grey">add</i>
+                </button>
+
+              </form>
+            </div>
+
+          </div> {{!--close Comment section--}}
+
+        </div>
+        {{/each}}
+
+
+    
+    </section>
+</main>
